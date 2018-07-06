@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>PAW</title>
+		<script src="jquery.min.js"></script>
+		<link href="bootstrap.css" rel="stylesheet">
+
+		<script>
+			$(document).ready(function(){
+				var jumlahSks 		= 0;
+				var jumlahBobot 	= 0;
+				var ipk 			= 0;
+
+				$("#isi").click(function(){
+					var nama_makul 	= $("#nama_makul").val() ;
+					var sks 		= $("#sks").val() ;
+					var nilai 		= $("#nilai").val() ;
+					var angka 		= getAngka(nilai);
+					var bobot 		= sks * angka ;
+
+					jumlahSks 		= jumlahSks + parseInt(sks); //menjumlah total sks
+					jumlahBobot 	= jumlahBobot + bobot; //menjumlah total bobot
+					
+
+					//validasi
+					if(nama_makul === '') {
+						$("#eror_makul").html("Nama Mata Kuliah Harus Diisikan");
+					} else {
+						hitungIpk();
+						$('tbody').append("<tr>" + "<td>" + nama_makul + "</td>" + "<td><div id=k_sks>" + sks + "</div></td>" + "<td>" +nilai +"</td>" + "<td>" +angka +"</td>" + "<td><div id=k_bobot>" + bobot + "</div></td>" + "<td><button class='btn btn-sm btn-danger hapus' id=hapus>Hapus</button></td></tr>") ;
+
+						//$('tfoot').html("<tr>" + "<td>TOTAL</td>" + "<td>" + jumlahSks + "</td><td></td><td></td><td>" + jumlahBobot + "</td>" + "<td></td></tr>");
+						
+						$('#totalSks').html(jumlahSks);
+						$('#totalBobot').html(jumlahBobot);
+						
+					}
+				});
+
+
+					/**
+					 * Hapus data
+					 */
+					
+				$(document).on('click', 'button.hapus', function() {
+					var removeSks	= ($(this).closest('tr').find("td:eq(1)").text());
+					var removeAngka = ($(this).closest('tr').find("td:eq(3)").text());
+					var removeBobot = ($(this).closest('tr').find("td:eq(4)").text());
+
+					/** log remove */
+					console.log(removeSks);
+					console.log(removeAngka);
+					console.log(removeBobot);
+
+					jumlahSks 		= jumlahSks - removeSks;
+					jumlahBobot 	= jumlahBobot - removeBobot;
+
+					hitungIpk();
+
+					$(this).closest('tr').remove();
+
+					$('#totalSks').html(jumlahSks);
+					$('#totalBobot').html(jumlahBobot);
+
+					return false;
+				});
+
+					/**
+					menghitung ipk
+					**/
+				function hitungIpk() {
+					if(jumlahSks===0) {
+						$('#ipk').val(0);
+					} else {
+						ipk 		= jumlahBobot/jumlahSks;
+						$('#ipk').val(ipk);
+					}
+					
+				}
+
+				function getAngka(x) {
+					switch(x) {
+						case 'A' : return 4;
+						case 'B' : return 3;
+						case 'C' : return 2;
+						case 'D' : return 1;
+						case 'E' : return 0;
+					}
+				}
+			}) ;
+
+			function eraseText() {
+				var makul 	= "";
+				var nama 	= "";
+				$('#nama_makul').val(makul);
+				$('#nama').val(nama);
+			}
+		</script>
+	</head>
+
+	<body>
+		<div class="container">
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					<h2 class="panel-title"><b>Anggota Kelompok</b></h2>
+				</div>
+				<div class="panel-body">
+					<ol>
+					  	<li>Arief Gunawan - 175410090</li>
+					  	<li>Dwi Astuti - 175410089</li>
+					  	<li>Mahfud Iskandarwanto - 165410180</li>
+					</ol>
+				</div>
+			</div>
+
+			<div class="panel panel-success">
+				<div class="panel-heading">
+					<h2 class="panel-title"><b>Halaman Untuk Menghitung IPK</b></h2>
+				</div>
+				<div class="panel-body">
+					<div id="divIpk">
+						<form id="formIpk" class="form-horizontal" action="#" onsubmit="return false">
+				 			<div class="form-group">
+							    <label for="nim" class="col-sm-2 control-label">NIM</label>
+							    <div class="col-sm-3">
+							      	<input type="text" class="form-control required" id="nim" placeholder="NIM" >
+							    </div>
+							</div>
+							<div class="form-group">
+							    <label for="nama" class="col-sm-2 control-label">Nama</label>
+							    <div class="col-sm-6">
+							      	<input type="text" class="form-control required" id="nama" placeholder="Nama">
+							    </div>
+							</div>
+							<div class="form-group">
+							    <label for="ipk" class="col-sm-2 control-label">IPK</label>
+							    <div class="col-sm-2">
+							      	<input type="text" class="form-control required" value="0" id="ipk" placeholder="IPK" >
+							    </div>
+							</div>
+							<hr>
+							<div class="form-group">
+							    <label for="nama_makul" class="col-sm-2 control-label">Nama Mata Kuliah</label>
+							    <div class="col-sm-5">
+							      	<input type="text" class="form-control" id="nama_makul" placeholder="Nama Mata Kuliah" required>Nama Mata Kuliah harus di isi
+							    </div>
+							</div>
+							<div class="form-group">
+							    <label for="sks" class="col-sm-2 control-label">SKS</label>
+							    <div class="col-sm-2">
+							      	<select class="form-control required" id="sks" placeholder="SKS" >
+							      		<option value=""></option>
+							      		<option value="1">1</option>
+							      		<option value="2">2</option>
+							      		<option value="3">3</option>
+							      		<option value="4">4</option>
+							      	</select>
+							    </div>
+							</div>
+							<div class="form-group">
+							    <label for="nilai" class="col-sm-2 control-label">Nilai</label>
+							    <div class="col-sm-2">
+							      	<select class="form-control required" id="nilai" >
+							      		<option value=""></option>
+							      		<option value="A">A</option>
+							      		<option value="B">B</option>
+							      		<option value="C">C</option>
+							      		<option value="D">D</option>
+							      		<option value="E">E</option>
+							      	</select>
+							    </div>
+							</div>
+							<div class="form-group">
+							    <div class="col-sm-offset-2 col-sm-10">
+							      <input type="submit" id="isi" value="Simpan" class="btn btn-primary">
+							      <input type="button" value="Clear" class="btn btn-warning" onclick="javascript:eraseText();">
+							    </div>
+							</div>
+						</form>
+
+							<table class="table table-bordered">
+								<thead>
+									<tr >
+										<th>NAMA MATA KULIAH</th>
+										<th>SKS</th>
+										<th>NILAI</th>
+										<th>ANGKA</th>
+										<th>BOBOT</th>
+										<th>#</th>
+									</tr>
+								</thead>
+
+								<tbody>
+									<!-- akan diisikan hasil -->
+								</tbody>
+
+								<tfoot>
+									<tr bgcolor="tomato">
+										<td>TOTAL</td>
+										<td><div id="totalSks">0</div></td>
+										<td></td>
+										<td></td>
+										<td><div id="totalBobot">0</div></td>
+										<td></td>
+									</tr>
+								</tfoot>
+							</table>
+						
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
